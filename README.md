@@ -11,12 +11,11 @@ monitoramento-industrial/
 ├── backend/
 │   ├── src/main/java/
 │   │   └── Main.java       # Servidor HTTP + simulação dos sensores
-│   └── pom.xml             # Configuração Maven
+│   └── pom.xml             
 ├── frontend/
 │   └── projecthorizon-front/
 │       ├── src/
-│       │   └── App.jsx     # Interface React
-│       ├── .env.local      # URL do backend (não vai pro GitHub)
+│       │   └── App.jsx         
 │       └── package.json
 └── README.md
 ```
