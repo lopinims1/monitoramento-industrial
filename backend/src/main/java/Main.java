@@ -1,3 +1,5 @@
+package main.java;
+
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
@@ -8,14 +10,17 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
+        
+        String portEnv = System.getenv("PORT");
+        int port = (portEnv != null) ? Integer.parseInt(portEnv) : 8080;
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/data", new MyHandler());
-
         server.setExecutor(null);
         server.start();
 
-        System.out.println("Server running on http//localhost:8080/data");
+        System.out.println("Server running on port " + port);
     }
 
     static class MyHandler implements HttpHandler {
@@ -25,39 +30,40 @@ public class Main {
         @Override
         public void handle(HttpExchange exchange) {
             try {
-                //sensor simulator
                 int pressao = 80 + random.nextInt(100);
                 int temperatura = 20 + random.nextInt(100);
                 boolean vazamento = random.nextBoolean();
 
                 String risco;
-                boolean flare = random.nextBoolean();
+                String estado;
+                boolean flare;
 
-                if (flare) {
-                    System.out.println("Necessário");
-                } else {
-                    System.out.println("Desnecessário");
-                }
-
-                if(vazamento || temperatura > 120 || pressao > 150 ){
+                if (vazamento || temperatura > 120 || pressao > 150) {
                     risco = "Crítico";
+                    estado = "Urgente";
                     flare = true;
-                } else if (temperatura > 80 && temperatura < 120 || pressao > 130 && pressao < 150 ) {
+                } else if (temperatura > 80 || pressao > 130) {
                     risco = "Alerta";
+                    estado = "Perigo";
                     flare = false;
-                } else if (temperatura > 60 && temperatura < 80 || pressao > 110 && pressao < 130) {
+                } else if (temperatura > 60 || pressao > 110) {
                     risco = "Instável";
+                    estado = "Seguro";
                     flare = false;
                 } else {
                     risco = "Baixo";
+                    estado = "Seguro";
                     flare = false;
                 }
+
+                System.out.println("Flare: " + (flare ? "Necessário" : "Desnecessário"));
 
                 String res = "{"
                         + "\"pressao\": " + pressao + ","
                         + "\"temperatura\": " + temperatura + ","
                         + "\"vazamento\": " + vazamento + ","
                         + "\"risco\": \"" + risco + "\","
+                        + "\"estado\": \"" + estado + "\","
                         + "\"flare\": " + flare
                         + "}";
 
@@ -65,7 +71,6 @@ public class Main {
 
                 exchange.getResponseHeaders().add("Content-Type", "application/json; charset=utf-8");
                 exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-
                 exchange.sendResponseHeaders(200, responseBytes.length);
 
                 OutputStream os = exchange.getResponseBody();
@@ -76,7 +81,5 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        
     }
 }
-

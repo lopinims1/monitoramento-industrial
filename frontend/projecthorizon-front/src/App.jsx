@@ -120,7 +120,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = () => {
-      fetch('http://localhost:8080/data')
+      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/data`)
         .then((res) => res.json())
         .then((data) => setData(data))
         .catch((error) => console.error('Erro ao buscar dados:', error));
