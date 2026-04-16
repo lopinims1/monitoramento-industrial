@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 const RISK_THEME = {
   Crítico: {
-
     border: 'border-neutral-700',
     ledColor: 'bg-red-500',
     ledShadow: 'shadow-[0_0_8px_2px_rgba(239,68,68,0.7)]',
@@ -11,10 +10,8 @@ const RISK_THEME = {
     statusColor: 'text-red-400',
     circleColor: 'bg-red-500/20 border-red-500',
     highlightColor: 'text-red-400',
-
   },
   Alerta: {
-
     border: 'border-red-900',
     ledColor: 'bg-red-500',
     ledShadow: 'shadow-[0_0_6px_rgba(239,68,68,0.6)]',
